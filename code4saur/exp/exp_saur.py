@@ -4,9 +4,16 @@ from exp.exp_online import Exp_Online
 
 class SAURState:
 
-    def __init__(self, channels, horizon, device, alpha=0.3, beta=0.05,
-                 gamma=0.2, kappa=2.0, a=4.0, q=0.5, delta=2.0,
-                 epsilon=1e-8):
+    def __init__(self, channels, horizon, device, alpha="xxx", beta="xxx",
+                 gamma="xxx", kappa="xxx", a="xxx", q="xxx", delta="xxx",
+                 epsilon="xxx"):
+        controller_values = dict(alpha=alpha, beta=beta, gamma=gamma, kappa=kappa,
+                                 a=a, q=q, delta=delta, epsilon=epsilon)
+        unset = [name for name, value in controller_values.items()
+                 if isinstance(value, str) and value == "xxx"]
+        if unset:
+            raise ValueError("SAUR controller values must be set explicitly; replace 'xxx' for: "
+                             + ", ".join(unset))
         if channels < 1 or horizon < 1:
             raise ValueError("channels and horizon must be positive")
         if not 0 < beta < alpha < 1:
@@ -76,7 +83,7 @@ class Exp_SAUR(Exp_Online):
             args.c_out, args.pred_len, self.device,
             alpha=args.saur_alpha, beta=args.saur_beta, gamma=args.saur_gamma,
             kappa=args.saur_kappa, a=args.saur_a, q=args.saur_q,
-            delta=args.saur_delta,
+            delta=args.saur_delta, epsilon=args.saur_epsilon,
         )
 
     def _reset_online_state(self):

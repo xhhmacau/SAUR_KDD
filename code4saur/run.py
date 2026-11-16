@@ -20,6 +20,11 @@ def boolean(value):
     raise ValueError(value)
 
 
+def saur_value(value):
+    """Keep an unset controller placeholder until the selected method is known."""
+    return value if value == "xxx" else float(value)
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", required=True, choices=["DLinear", "PatchTST", "iTransformer", "TCN"])
 parser.add_argument("--dataset", required=True, choices=list(settings.data_settings))
@@ -70,14 +75,21 @@ parser.add_argument("--affine", type=int, default=0)
 parser.add_argument("--subtract_last", type=int, default=0)
 parser.add_argument("--decomposition", type=int, default=0)
 parser.add_argument("--kernel_size", type=int, default=25)
-parser.add_argument("--saur_alpha", type=float, default=0.3)
-parser.add_argument("--saur_beta", type=float, default=0.05)
-parser.add_argument("--saur_gamma", type=float, default=0.2)
-parser.add_argument("--saur_kappa", type=float, default=2.0)
-parser.add_argument("--saur_a", type=float, default=4.0)
-parser.add_argument("--saur_q", type=float, default=0.5)
-parser.add_argument("--saur_delta", type=float, default=2.0)
+parser.add_argument("--saur_alpha", type=saur_value, default="xxx")
+parser.add_argument("--saur_beta", type=saur_value, default="xxx")
+parser.add_argument("--saur_gamma", type=saur_value, default="xxx")
+parser.add_argument("--saur_kappa", type=saur_value, default="xxx")
+parser.add_argument("--saur_a", type=saur_value, default="xxx")
+parser.add_argument("--saur_q", type=saur_value, default="xxx")
+parser.add_argument("--saur_delta", type=saur_value, default="xxx")
+parser.add_argument("--saur_epsilon", type=saur_value, default="xxx")
 args = parser.parse_args()
+if args.online_method == "SAUR":
+    unset = [name for name, value in vars(args).items()
+             if name.startswith("saur_") and value == "xxx"]
+    if unset:
+        parser.error("SAUR controller values must be set explicitly; replace 'xxx' for: "
+                     + ", ".join("--" + name for name in unset))
 args.use_gpu = bool(torch.cuda.is_available() and args.use_gpu)
 args.wrap_data_class = []
 args.timeenc = 0

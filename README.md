@@ -55,6 +55,14 @@ python run.py \
   --dataset ETTh1 \
   --root_path ./dataset \
   --online_method SAUR \
+  --saur_alpha xxx \
+  --saur_beta xxx \
+  --saur_gamma xxx \
+  --saur_kappa xxx \
+  --saur_a xxx \
+  --saur_q xxx \
+  --saur_delta xxx \
+  --saur_epsilon xxx \
   --seq_len 96 \
   --pred_len 24
 ```
@@ -67,6 +75,14 @@ python run.py \
   --dataset ETTh1 \
   --root_path ./dataset \
   --online_method SAUR \
+  --saur_alpha xxx \
+  --saur_beta xxx \
+  --saur_gamma xxx \
+  --saur_kappa xxx \
+  --saur_a xxx \
+  --saur_q xxx \
+  --saur_delta xxx \
+  --saur_epsilon xxx \
   --seq_len 96 \
   --pred_len 24 \
   --only_test \
@@ -74,6 +90,8 @@ python run.py \
 ```
 
 Set `--use_gpu false` to run on CPU. Use `--model` and `--dataset` to select a backbone and dataset. The controller options use the `--saur_` prefix.
+
+All eight SAUR controller options default to the placeholder `xxx`, including the numerical stabilizer `--saur_epsilon`. Replace every `xxx` in these command templates with a numeric value selected for your experimental setting before running SAUR. Unset controller values produce an explicit error; no numeric controller defaults are applied. These options are unused for offline training and plain `Online` evaluation, which can leave them unset.
 
 ## Code Structure
 
